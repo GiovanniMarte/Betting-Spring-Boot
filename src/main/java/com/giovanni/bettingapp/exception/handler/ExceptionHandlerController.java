@@ -4,7 +4,7 @@ import com.giovanni.bettingapp.dto.ExceptionDto;
 import com.giovanni.bettingapp.exception.BadRequestException;
 import com.giovanni.bettingapp.exception.ConflictException;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
-import com.giovanni.bettingapp.util.AppConstant;
+import com.giovanni.bettingapp.util.ConstantUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.Errors;
@@ -13,6 +13,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ExceptionHandlerController {
         errors.getAllErrors().forEach(error -> errorMessages.add(error.getDefaultMessage()));
 
         ExceptionDto exceptionDto = ExceptionDto.builder()
-                .message(AppConstant.VALIDATION_ERROR)
+                .message(ConstantUtil.VALIDATION_ERROR)
                 .errors(errorMessages)
                 .status(BAD_REQUEST)
                 .timestamp(ZonedDateTime.now())
@@ -100,5 +101,16 @@ public class ExceptionHandlerController {
                 .timestamp(ZonedDateTime.now())
                 .build();
         return new ResponseEntity<>(exceptionDto, METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ExceptionDto> handleException(NoHandlerFoundException ex) {
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+                .message(ConstantUtil.URL_NOT_FOUND)
+                .errors(new ArrayList<>())
+                .status(NOT_FOUND)
+                .timestamp(ZonedDateTime.now())
+                .build();
+        return new ResponseEntity<>(exceptionDto, NOT_FOUND);
     }
 }

@@ -1,17 +1,18 @@
 package com.giovanni.bettingapp.service;
 
-import com.giovanni.bettingapp.exception.ConflictException;
+import com.giovanni.bettingapp.dto.MatchDto;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
 import com.giovanni.bettingapp.model.Match;
 import com.giovanni.bettingapp.model.Team;
 import com.giovanni.bettingapp.repository.MatchRepository;
 import com.giovanni.bettingapp.repository.TeamRepository;
+import com.giovanni.bettingapp.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.giovanni.bettingapp.util.AppConstant.*;
+import static com.giovanni.bettingapp.util.ConstantUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +20,15 @@ public class MatchService {
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
 
-    public List<Match> getMatches() {
-        return matchRepository.findAll();
+    public List<MatchDto> getMatches() {
+        List<Match> matches = matchRepository.findAll();
+        return MapperUtil.mapMatches(matches);
     }
 
-    public Match getMatch(int id) {
-        return matchRepository.findById(id)
+    public MatchDto getMatch(int id) {
+        Match match = matchRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MATCH_WITH_ID + id + NOT_FOUND));
+        return MapperUtil.mapMatch(match);
     }
 
     public Match addMatch(Match match) {

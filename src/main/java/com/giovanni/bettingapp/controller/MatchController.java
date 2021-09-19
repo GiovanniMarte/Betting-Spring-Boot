@@ -1,5 +1,6 @@
 package com.giovanni.bettingapp.controller;
 
+import com.giovanni.bettingapp.dto.MatchDto;
 import com.giovanni.bettingapp.model.Match;
 import com.giovanni.bettingapp.service.MatchService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ public class MatchController {
     private final MatchService matchService;
 
     @GetMapping
-    public ResponseEntity<List<Match>> getMatches() {
-        List<Match> matches = matchService.getMatches();
+    public ResponseEntity<List<MatchDto>> getMatches() {
+        List<MatchDto> matches = matchService.getMatches();
         return new ResponseEntity<>(matches, OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Match> getMatch(@PathVariable int id) {
-        Match match = matchService.getMatch(id);
+    public ResponseEntity<MatchDto> getMatch(@PathVariable int id) {
+        MatchDto match = matchService.getMatch(id);
         return new ResponseEntity<>(match, OK);
     }
 

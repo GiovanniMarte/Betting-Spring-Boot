@@ -1,5 +1,6 @@
 package com.giovanni.bettingapp.service;
 
+import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
 import com.giovanni.bettingapp.model.Bet;
 import com.giovanni.bettingapp.model.Match;
@@ -7,12 +8,13 @@ import com.giovanni.bettingapp.model.User;
 import com.giovanni.bettingapp.repository.BetRepository;
 import com.giovanni.bettingapp.repository.MatchRepository;
 import com.giovanni.bettingapp.repository.UserRepository;
+import com.giovanni.bettingapp.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.giovanni.bettingapp.util.AppConstant.*;
+import static com.giovanni.bettingapp.util.ConstantUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,13 +23,15 @@ public class BetService {
     private final UserRepository userRepository;
     private final MatchRepository matchRepository;
 
-    public List<Bet> getBets() {
-        return betRepository.findAll();
+    public List<BetDto> getBets() {
+        List<Bet> bets = betRepository.findAll();
+        return MapperUtil.mapBets(bets);
     }
 
-    public Bet getBet(int id) {
-        return betRepository.findById(id)
+    public BetDto getBet(int id) {
+        Bet bet = betRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(BET_WITH_ID + id + NOT_FOUND));
+        return MapperUtil.mapBet(bet);
     }
 
     public Bet addBet(Bet bet) {

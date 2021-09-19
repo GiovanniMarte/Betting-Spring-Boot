@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.giovanni.bettingapp.util.AppConstant.*;
+import static com.giovanni.bettingapp.util.ConstantUtil.*;
 
 @Service
 @RequiredArgsConstructor

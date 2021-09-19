@@ -1,5 +1,6 @@
 package com.giovanni.bettingapp.controller;
 
+import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.model.Bet;
 import com.giovanni.bettingapp.service.BetService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ public class BetController {
     private final BetService betService;
 
     @GetMapping
-    public ResponseEntity<List<Bet>> getBets() {
-        List<Bet> bets = betService.getBets();
+    public ResponseEntity<List<BetDto>> getBets() {
+        List<BetDto> bets = betService.getBets();
         return new ResponseEntity<>(bets, OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Bet> getBet(@PathVariable int id) {
-        Bet bet = betService.getBet(id);
+    public ResponseEntity<BetDto> getBet(@PathVariable int id) {
+        BetDto bet = betService.getBet(id);
         return new ResponseEntity<>(bet, OK);
     }
 

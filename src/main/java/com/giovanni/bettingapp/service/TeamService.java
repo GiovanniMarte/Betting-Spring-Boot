@@ -1,6 +1,5 @@
 package com.giovanni.bettingapp.service;
 
-import com.giovanni.bettingapp.exception.ConflictException;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
 import com.giovanni.bettingapp.model.Team;
 import com.giovanni.bettingapp.repository.TeamRepository;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.giovanni.bettingapp.util.AppConstant.*;
+import static com.giovanni.bettingapp.util.ConstantUtil.*;
 
 
 @Service
