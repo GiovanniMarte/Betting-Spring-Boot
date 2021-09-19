@@ -11,8 +11,10 @@ public class Bet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private Short goals_home;
-    private Short goals_away;
+    @Column(name = "goals_home")
+    private Short goalsHome;
+    @Column(name = "goals_away")
+    private Short goalsAway;
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")

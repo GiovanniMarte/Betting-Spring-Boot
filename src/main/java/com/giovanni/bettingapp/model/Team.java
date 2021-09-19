@@ -1,5 +1,6 @@
 package com.giovanni.bettingapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,9 +15,11 @@ public class Team {
     private int id;
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "teamHome", cascade = CascadeType.ALL)
     private List<Match> matchesHome;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "teamAway", cascade = CascadeType.ALL)
     private List<Match> matchesAway;
 }
