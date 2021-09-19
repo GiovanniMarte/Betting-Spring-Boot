@@ -23,13 +23,10 @@ public class TeamService {
 
     public Team getTeam(int id) {
         return teamRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_WITH + id + NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(TEAM_WITH_ID + id + NOT_FOUND));
     }
 
     public Team addTeam(Team team) {
-        if (teamRepository.existsById(team.getId())) {
-            throw new ConflictException(TEAM_WITH + team.getId() + EXISTS);
-        }
         return teamRepository.save(team);
     }
 
@@ -39,12 +36,12 @@ public class TeamService {
                     team.setName(newTeam.getName());
                     return teamRepository.save(team);
                 })
-                .orElseThrow(() -> new ResourceNotFoundException(TEAM_WITH + id + NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(TEAM_WITH_ID + id + NOT_FOUND));
     }
 
     public void deleteTeam(int id) {
         if (!teamRepository.existsById(id)) {
-            throw new ResourceNotFoundException(TEAM_WITH + id + NOT_FOUND);
+            throw new ResourceNotFoundException(TEAM_WITH_ID + id + NOT_FOUND);
         }
         teamRepository.deleteById(id);
     }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -19,8 +20,8 @@ public class BetController {
 
     @GetMapping
     public ResponseEntity<List<Bet>> getBets() {
-        List<Bet> betes = betService.getBets();
-        return new ResponseEntity<>(betes, OK);
+        List<Bet> bets = betService.getBets();
+        return new ResponseEntity<>(bets, OK);
     }
 
     @GetMapping("/{id}")
@@ -30,13 +31,13 @@ public class BetController {
     }
 
     @PostMapping()
-    public ResponseEntity<Bet> getBet(@RequestBody Bet bet) {
+    public ResponseEntity<Bet> getBet(@Valid @RequestBody Bet bet) {
         Bet newBet = betService.addBet(bet);
         return new ResponseEntity<>(newBet, OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Bet> updateBet(@PathVariable int id, @RequestBody Bet bet) {
+    public ResponseEntity<Bet> updateBet(@PathVariable int id, @Valid @RequestBody Bet bet) {
         Bet updateBet = betService.updateBet(id, bet);
         return new ResponseEntity<>(updateBet, OK);
     }

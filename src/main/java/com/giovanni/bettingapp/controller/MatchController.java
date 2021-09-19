@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -30,13 +31,13 @@ public class MatchController {
     }
 
     @PostMapping()
-    public ResponseEntity<Match> getMatch(@RequestBody Match match) {
+    public ResponseEntity<Match> getMatch(@Valid @RequestBody Match match) {
         Match newMatch = matchService.addMatch(match);
         return new ResponseEntity<>(newMatch, OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Match> updateMatch(@PathVariable int id, @RequestBody Match match) {
+    public ResponseEntity<Match> updateMatch(@PathVariable int id, @Valid @RequestBody Match match) {
         Match updateMatch = matchService.updateMatch(id, match);
         return new ResponseEntity<>(updateMatch, OK);
     }

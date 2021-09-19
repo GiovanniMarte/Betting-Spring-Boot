@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -29,13 +30,13 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<Team> addTeam(@RequestBody Team team) {
+    public ResponseEntity<Team> addTeam(@Valid @RequestBody Team team) {
         Team newTeam = teamService.addTeam(team);
         return new ResponseEntity<>(newTeam, OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Team> updateTeam(@PathVariable int id, @RequestBody Team team) {
+    public ResponseEntity<Team> updateTeam(@PathVariable int id, @Valid @RequestBody Team team) {
         Team updatedTeam = teamService.updateTeam(id, team);
         return new ResponseEntity<>(updatedTeam, OK);
     }
