@@ -1,6 +1,5 @@
 package com.giovanni.bettingapp.service;
 
-import com.giovanni.bettingapp.exception.ConflictException;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
 import com.giovanni.bettingapp.model.Bet;
 import com.giovanni.bettingapp.model.Match;

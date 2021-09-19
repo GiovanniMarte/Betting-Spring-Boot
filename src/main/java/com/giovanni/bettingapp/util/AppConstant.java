@@ -1,6 +1,7 @@
 package com.giovanni.bettingapp.util;
 
 public class AppConstant {
+    public static final String VALIDATION_ERROR = "Your request is invalid. Check errors";
     public static final String TEAM_WITH_ID = "Team with id '";
     public static final String MATCH_WITH_ID = "Match with id '";
     public static final String BET_WITH_ID = "Bet with id '";
