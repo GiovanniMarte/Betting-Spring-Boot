@@ -1,7 +1,9 @@
 package com.giovanni.bettingapp.service;
 
+import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.exception.ConflictException;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
+import com.giovanni.bettingapp.mapper.BetMapper;
 import com.giovanni.bettingapp.model.User;
 import com.giovanni.bettingapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import static com.giovanni.bettingapp.util.ConstantUtil.*;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final BetMapper betMapper;
+
 
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -23,6 +27,12 @@ public class UserService {
     public User getUser(int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_WITH_ID + id + NOT_FOUND));
+    }
+
+    public List<BetDto> getBetsByUser(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(USER_WITH_ID + id + NOT_FOUND));
+        return betMapper.toBetDtoList(user.getBets());
     }
 
     public User addUser(User user) {

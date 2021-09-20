@@ -1,6 +1,8 @@
 package com.giovanni.bettingapp.service;
 
+import com.giovanni.bettingapp.dto.MatchDto;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
+import com.giovanni.bettingapp.mapper.MatchMapper;
 import com.giovanni.bettingapp.model.Team;
 import com.giovanni.bettingapp.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import static com.giovanni.bettingapp.util.ConstantUtil.*;
 @RequiredArgsConstructor
 public class TeamService {
     private final TeamRepository teamRepository;
+    private final MatchMapper matchMapper;
 
     public List<Team> getTeams() {
         return teamRepository.findAll();
@@ -23,6 +26,18 @@ public class TeamService {
     public Team getTeam(int id) {
         return teamRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(TEAM_WITH_ID + id + NOT_FOUND));
+    }
+
+    public List<MatchDto> getMatchesHomeByTeam(int id) {
+        Team team = teamRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(TEAM_WITH_ID + id + NOT_FOUND));
+        return matchMapper.toMatchDtoList(team.getMatchesHome());
+    }
+
+    public List<MatchDto> getMatchesAwayByTeam(int id) {
+        Team team = teamRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(TEAM_WITH_ID + id + NOT_FOUND));
+        return matchMapper.toMatchDtoList(team.getMatchesAway());
     }
 
     public Team addTeam(Team team) {

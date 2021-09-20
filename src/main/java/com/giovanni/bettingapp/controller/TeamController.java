@@ -1,5 +1,6 @@
 package com.giovanni.bettingapp.controller;
 
+import com.giovanni.bettingapp.dto.MatchDto;
 import com.giovanni.bettingapp.model.Team;
 import com.giovanni.bettingapp.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,18 @@ public class TeamController {
     public ResponseEntity<Team> getTeam(@PathVariable int id) {
         Team team = teamService.getTeam(id);
         return new ResponseEntity<>(team, OK);
+    }
+
+    @GetMapping("/{id}/matches/home")
+    public ResponseEntity<List<MatchDto>> getMatchesHomeByTeam(@PathVariable int id) {
+        List<MatchDto> matches = teamService.getMatchesHomeByTeam(id);
+        return new ResponseEntity<>(matches, OK);
+    }
+
+    @GetMapping("/{id}/matches/away")
+    public ResponseEntity<List<MatchDto>> getMatchesAwayByTeam(@PathVariable int id) {
+        List<MatchDto> matches = teamService.getMatchesAwayByTeam(id);
+        return new ResponseEntity<>(matches, OK);
     }
 
     @PostMapping

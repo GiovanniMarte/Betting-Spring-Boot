@@ -1,10 +1,10 @@
 package com.giovanni.bettingapp.controller;
 
+import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.dto.MatchDto;
 import com.giovanni.bettingapp.model.Match;
 import com.giovanni.bettingapp.service.MatchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,16 +31,22 @@ public class MatchController {
         return new ResponseEntity<>(match, OK);
     }
 
+    @GetMapping("/{id}/bets")
+    public ResponseEntity<List<BetDto>> getBetsByMatch(@PathVariable int id) {
+        List<BetDto> bets = matchService.getBetsByMatch(id);
+        return new ResponseEntity<>(bets, OK);
+    }
+
     @PostMapping()
-    public ResponseEntity<Match> getMatch(@Valid @RequestBody Match match) {
-        Match newMatch = matchService.addMatch(match);
+    public ResponseEntity<MatchDto> getMatch(@Valid @RequestBody Match match) {
+        MatchDto newMatch = matchService.addMatch(match);
         return new ResponseEntity<>(newMatch, OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Match> updateMatch(@PathVariable int id, @Valid @RequestBody Match match) {
-        Match updateMatch = matchService.updateMatch(id, match);
-        return new ResponseEntity<>(updateMatch, OK);
+    public ResponseEntity<MatchDto> updateMatch(@PathVariable int id, @Valid @RequestBody Match match) {
+        MatchDto updatedMatch = matchService.updateMatch(id, match);
+        return new ResponseEntity<>(updatedMatch, OK);
     }
 
     @DeleteMapping("/{id}")

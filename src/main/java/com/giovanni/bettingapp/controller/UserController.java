@@ -1,5 +1,6 @@
 package com.giovanni.bettingapp.controller;
 
+import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.model.User;
 import com.giovanni.bettingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,12 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable int id) {
         User user = userService.getUser(id);
         return new ResponseEntity<>(user, OK);
+    }
+
+    @GetMapping("/{id}/bets")
+    public ResponseEntity<List<BetDto>> getBetsByUser(@PathVariable int id) {
+        List<BetDto> bets = userService.getBetsByUser(id);
+        return new ResponseEntity<>(bets, OK);
     }
 
     @PostMapping

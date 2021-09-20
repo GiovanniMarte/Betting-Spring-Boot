@@ -1,12 +1,14 @@
 package com.giovanni.bettingapp.service;
 
+import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.dto.MatchDto;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
+import com.giovanni.bettingapp.mapper.BetMapper;
+import com.giovanni.bettingapp.mapper.MatchMapper;
 import com.giovanni.bettingapp.model.Match;
 import com.giovanni.bettingapp.model.Team;
 import com.giovanni.bettingapp.repository.MatchRepository;
 import com.giovanni.bettingapp.repository.TeamRepository;
-import com.giovanni.bettingapp.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,25 +21,35 @@ import static com.giovanni.bettingapp.util.ConstantUtil.*;
 public class MatchService {
     private final MatchRepository matchRepository;
     private final TeamRepository teamRepository;
+    private final MatchMapper matchMapper;
+    private final BetMapper betMapper;
 
     public List<MatchDto> getMatches() {
         List<Match> matches = matchRepository.findAll();
-        return MapperUtil.mapMatches(matches);
+        return matchMapper.toMatchDtoList(matches);
     }
 
     public MatchDto getMatch(int id) {
         Match match = matchRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(MATCH_WITH_ID + id + NOT_FOUND));
-        return MapperUtil.mapMatch(match);
+        return matchMapper.toMatchDto(match);
     }
 
-    public Match addMatch(Match match) {
+    public List<BetDto> getBetsByMatch(int id) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(MATCH_WITH_ID + id + NOT_FOUND));
+        return betMapper.toBetDtoList(match.getBets());
+    }
+
+    public MatchDto addMatch(Match match) {
         match.setTeamHome(findTeam(match.getTeamHome()));
         match.setTeamAway(findTeam(match.getTeamAway()));
-        return matchRepository.save(match);
+
+        Match savedMatch = matchRepository.save(match);
+        return matchMapper.toMatchDto(savedMatch);
     }
 
-    public Match updateMatch(int id, Match newMatch) {
+    public MatchDto updateMatch(int id, Match newMatch) {
         return matchRepository.findById(id)
                 .map(match -> {
                     match.setGoalsHome(newMatch.getGoalsHome());
@@ -45,7 +57,9 @@ public class MatchService {
                     match.setTeamHome(findTeam(newMatch.getTeamHome()));
                     match.setTeamAway(findTeam(newMatch.getTeamAway()));
                     match.setDate(newMatch.getDate());
-                    return matchRepository.save(match);
+
+                    Match updatedMatch = matchRepository.save(match);
+                    return matchMapper.toMatchDto(updatedMatch);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(MATCH_WITH_ID + id + NOT_FOUND));
     }

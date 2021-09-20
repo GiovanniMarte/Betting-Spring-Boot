@@ -2,13 +2,13 @@ package com.giovanni.bettingapp.service;
 
 import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
+import com.giovanni.bettingapp.mapper.BetMapper;
 import com.giovanni.bettingapp.model.Bet;
 import com.giovanni.bettingapp.model.Match;
 import com.giovanni.bettingapp.model.User;
 import com.giovanni.bettingapp.repository.BetRepository;
 import com.giovanni.bettingapp.repository.MatchRepository;
 import com.giovanni.bettingapp.repository.UserRepository;
-import com.giovanni.bettingapp.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,32 +22,37 @@ public class BetService {
     private final BetRepository betRepository;
     private final UserRepository userRepository;
     private final MatchRepository matchRepository;
+    private final BetMapper betMapper;
 
     public List<BetDto> getBets() {
         List<Bet> bets = betRepository.findAll();
-        return MapperUtil.mapBets(bets);
+        return betMapper.toBetDtoList(bets);
     }
 
     public BetDto getBet(int id) {
         Bet bet = betRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(BET_WITH_ID + id + NOT_FOUND));
-        return MapperUtil.mapBet(bet);
+        return betMapper.toBetDto(bet);
     }
 
-    public Bet addBet(Bet bet) {
+    public BetDto addBet(Bet bet) {
         bet.setUser(findUser(bet.getUser()));
         bet.setMatch(findMatch(bet.getMatch()));
-        return betRepository.save(bet);
+
+        Bet savedBet = betRepository.save(bet);
+        return betMapper.toBetDto(savedBet);
     }
 
-    public Bet updateBet(int id, Bet newBet) {
+    public BetDto updateBet(int id, Bet newBet) {
         return betRepository.findById(id)
                 .map(bet -> {
                     bet.setGoalsHome(newBet.getGoalsHome());
                     bet.setGoalsAway(newBet.getGoalsAway());
                     bet.setUser(findUser(newBet.getUser()));
                     bet.setMatch(findMatch(newBet.getMatch()));
-                    return betRepository.save(bet);
+
+                    Bet updatedBet = betRepository.save(bet);
+                    return betMapper.toBetDto(updatedBet);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException(BET_WITH_ID + id + NOT_FOUND));
     }

@@ -104,7 +104,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ExceptionDto> handleException(NoHandlerFoundException ex) {
+    public ResponseEntity<ExceptionDto> handleException() {
         ExceptionDto exceptionDto = ExceptionDto.builder()
                 .message(ConstantUtil.URL_NOT_FOUND)
                 .errors(new ArrayList<>())
