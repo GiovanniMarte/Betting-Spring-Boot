@@ -35,7 +35,7 @@ public class BetService {
         return betMapper.toBetDto(bet);
     }
 
-    public BetDto addBet(Bet bet) {
+    public BetDto saveBet(Bet bet) {
         bet.setUser(findUser(bet.getUser()));
         bet.setMatch(findMatch(bet.getMatch()));
 

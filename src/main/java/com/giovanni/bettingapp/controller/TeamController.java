@@ -43,8 +43,8 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<Team> addTeam(@Valid @RequestBody Team team) {
-        Team newTeam = teamService.addTeam(team);
+    public ResponseEntity<Team> saveTeam(@Valid @RequestBody Team team) {
+        Team newTeam = teamService.saveTeam(team);
         return new ResponseEntity<>(newTeam, OK);
     }
 

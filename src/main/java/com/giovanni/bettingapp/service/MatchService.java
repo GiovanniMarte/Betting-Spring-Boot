@@ -41,7 +41,7 @@ public class MatchService {
         return betMapper.toBetDtoList(match.getBets());
     }
 
-    public MatchDto addMatch(Match match) {
+    public MatchDto saveMatch(Match match) {
         match.setTeamHome(findTeam(match.getTeamHome()));
         match.setTeamAway(findTeam(match.getTeamAway()));
 

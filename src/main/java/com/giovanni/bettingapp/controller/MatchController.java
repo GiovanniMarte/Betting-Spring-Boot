@@ -38,8 +38,8 @@ public class MatchController {
     }
 
     @PostMapping()
-    public ResponseEntity<MatchDto> getMatch(@Valid @RequestBody Match match) {
-        MatchDto newMatch = matchService.addMatch(match);
+    public ResponseEntity<MatchDto> saveMatch(@Valid @RequestBody Match match) {
+        MatchDto newMatch = matchService.saveMatch(match);
         return new ResponseEntity<>(newMatch, OK);
     }
 

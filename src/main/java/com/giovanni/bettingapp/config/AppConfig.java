@@ -8,6 +8,7 @@ import java.util.Locale;
 
 @Configuration
 public class AppConfig {
+
     @Bean
     public SessionLocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();

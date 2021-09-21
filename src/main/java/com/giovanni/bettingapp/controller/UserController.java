@@ -1,6 +1,6 @@
 package com.giovanni.bettingapp.controller;
 
-import com.giovanni.bettingapp.dto.BetDto;
+import com.giovanni.bettingapp.model.Role;
 import com.giovanni.bettingapp.model.User;
 import com.giovanni.bettingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,16 +31,16 @@ public class UserController {
         return new ResponseEntity<>(user, OK);
     }
 
-    @GetMapping("/{id}/bets")
-    public ResponseEntity<List<BetDto>> getBetsByUser(@PathVariable int id) {
-        List<BetDto> bets = userService.getBetsByUser(id);
-        return new ResponseEntity<>(bets, OK);
+    @PostMapping
+    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
+        User newUser = userService.saveUser(user);
+        return new ResponseEntity<>(newUser, OK);
     }
 
-    @PostMapping
-    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        User newUser = userService.addUser(user);
-        return new ResponseEntity<>(newUser, OK);
+    @PostMapping("/{username}/role/{roleName}")
+    public ResponseEntity<Void> giveRole( @PathVariable String username, @PathVariable String roleName) {
+        userService.giveRole(username, roleName);
+        return new ResponseEntity<>(NO_CONTENT);
     }
 
     @PutMapping("/{id}")
@@ -52,6 +52,12 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
+        return new ResponseEntity<>(NO_CONTENT);
+    }
+
+    @DeleteMapping("/{username}/role/{roleName}")
+    public ResponseEntity<Void> removeRole( @PathVariable String username, @PathVariable String roleName) {
+        userService.removeRole(username, roleName);
         return new ResponseEntity<>(NO_CONTENT);
     }
 }

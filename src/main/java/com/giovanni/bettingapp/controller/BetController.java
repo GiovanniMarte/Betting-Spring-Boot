@@ -32,8 +32,8 @@ public class BetController {
     }
 
     @PostMapping()
-    public ResponseEntity<BetDto> getBet(@Valid @RequestBody Bet bet) {
-        BetDto newBet = betService.addBet(bet);
+    public ResponseEntity<BetDto> saveBet(@Valid @RequestBody Bet bet) {
+        BetDto newBet = betService.saveBet(bet);
         return new ResponseEntity<>(newBet, OK);
     }
 

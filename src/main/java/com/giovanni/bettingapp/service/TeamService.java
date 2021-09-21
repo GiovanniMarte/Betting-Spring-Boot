@@ -40,7 +40,7 @@ public class TeamService {
         return matchMapper.toMatchDtoList(team.getMatchesAway());
     }
 
-    public Team addTeam(Team team) {
+    public Team saveTeam(Team team) {
         return teamRepository.save(team);
     }
 

@@ -7,6 +7,7 @@ import com.giovanni.bettingapp.exception.ResourceNotFoundException;
 import com.giovanni.bettingapp.util.ConstantUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.Errors;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
