@@ -21,42 +21,42 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<List<Team>> getTeams() {
         List<Team> teams = teamService.getTeams();
-        return new ResponseEntity<>(teams, OK);
+        return ResponseEntity.ok().body(teams);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Team> getTeam(@PathVariable int id) {
         Team team = teamService.getTeam(id);
-        return new ResponseEntity<>(team, OK);
+        return ResponseEntity.ok().body(team);
     }
 
     @GetMapping("/{id}/matches/home")
     public ResponseEntity<List<MatchDto>> getMatchesHomeByTeam(@PathVariable int id) {
         List<MatchDto> matches = teamService.getMatchesHomeByTeam(id);
-        return new ResponseEntity<>(matches, OK);
+        return ResponseEntity.ok().body(matches);
     }
 
     @GetMapping("/{id}/matches/away")
     public ResponseEntity<List<MatchDto>> getMatchesAwayByTeam(@PathVariable int id) {
         List<MatchDto> matches = teamService.getMatchesAwayByTeam(id);
-        return new ResponseEntity<>(matches, OK);
+        return ResponseEntity.ok().body(matches);
     }
 
     @PostMapping
     public ResponseEntity<Team> saveTeam(@Valid @RequestBody Team team) {
         Team newTeam = teamService.saveTeam(team);
-        return new ResponseEntity<>(newTeam, OK);
+        return ResponseEntity.ok().body(newTeam);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Team> updateTeam(@PathVariable int id, @Valid @RequestBody Team team) {
         Team updatedTeam = teamService.updateTeam(id, team);
-        return new ResponseEntity<>(updatedTeam, OK);
+        return ResponseEntity.ok().body(updatedTeam);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable int id) {
         teamService.deleteTeam(id);
-        return new ResponseEntity<>(NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

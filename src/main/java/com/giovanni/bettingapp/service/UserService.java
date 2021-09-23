@@ -1,17 +1,21 @@
 package com.giovanni.bettingapp.service;
 
+import com.giovanni.bettingapp.dto.BetDto;
 import com.giovanni.bettingapp.dto.UserDto;
 import com.giovanni.bettingapp.exception.ConflictException;
 import com.giovanni.bettingapp.exception.ResourceNotFoundException;
+import com.giovanni.bettingapp.mapper.BetMapper;
 import com.giovanni.bettingapp.mapper.UserMapper;
 import com.giovanni.bettingapp.model.Role;
 import com.giovanni.bettingapp.model.User;
+import com.giovanni.bettingapp.repository.BetRepository;
 import com.giovanni.bettingapp.repository.RoleRepository;
 import com.giovanni.bettingapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 import static com.giovanni.bettingapp.util.ConstantUtil.*;
@@ -22,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final BetMapper betMapper;
     private final PasswordEncoder passwordEncoder;
 
     public List<UserDto> getUsers() {
@@ -35,11 +40,24 @@ public class UserService {
         return userMapper.toUserDto(user);
     }
 
+    public UserDto getCurrentUser(Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(USER_WITH_USERNAME + username + NOT_FOUND));
+        return userMapper.toUserDto(user);
+    }
+
     public UserDto saveUser(User user) {
         validateUser(user);
         user.giveDefaultRole();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.toUserDto(userRepository.save(user));
+    }
+
+    public List<BetDto> getBetsByUser(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(USER_WITH_ID + id + NOT_FOUND));
+        return betMapper.toBetDtoList(user.getBets());
     }
 
     public UserDto updateUser(int id, User newUser) {

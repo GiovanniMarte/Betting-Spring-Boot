@@ -22,30 +22,30 @@ public class BetController {
     @GetMapping
     public ResponseEntity<List<BetDto>> getBets() {
         List<BetDto> bets = betService.getBets();
-        return new ResponseEntity<>(bets, OK);
+        return ResponseEntity.ok().body(bets);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BetDto> getBet(@PathVariable int id) {
         BetDto bet = betService.getBet(id);
-        return new ResponseEntity<>(bet, OK);
+        return ResponseEntity.ok().body(bet);
     }
 
     @PostMapping()
     public ResponseEntity<BetDto> saveBet(@Valid @RequestBody Bet bet) {
         BetDto newBet = betService.saveBet(bet);
-        return new ResponseEntity<>(newBet, OK);
+        return ResponseEntity.ok().body(newBet);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BetDto> updateBet(@PathVariable int id, @Valid @RequestBody Bet bet) {
         BetDto updatedBet = betService.updateBet(id, bet);
-        return new ResponseEntity<>(updatedBet, OK);
+        return ResponseEntity.ok().body(updatedBet);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBet(@PathVariable int id) {
         betService.deleteBet(id);
-        return new ResponseEntity<>(NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,21 +1,14 @@
 package com.giovanni.bettingapp.controller;
 
+import com.giovanni.bettingapp.dto.UserDto;
 import com.giovanni.bettingapp.dto.auth.LoginDto;
 import com.giovanni.bettingapp.dto.auth.TokenDto;
-import com.giovanni.bettingapp.exception.UnauthorizedException;
-import com.giovanni.bettingapp.security.JwtTokenProvider;
+import com.giovanni.bettingapp.model.User;
+import com.giovanni.bettingapp.service.AuthService;
+import com.giovanni.bettingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -23,22 +16,19 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
+    private final UserService userService;
+
 
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@Valid @RequestBody LoginDto loginDto) {
-        Authentication user = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-        try {
-            Authentication authenticationToken = authenticationManager.authenticate(user);
+        TokenDto tokenDto = authService.login(loginDto);
+        return ResponseEntity.ok().body(tokenDto);
+    }
 
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-            String token = jwtTokenProvider.generateToken(authenticationToken);
-
-            return new ResponseEntity<>(new TokenDto(token), HttpStatus.OK);
-        } catch (BadCredentialsException e) {
-            throw new UnauthorizedException(e.getMessage());
-        }
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> register(@Valid @RequestBody User user) {
+        UserDto newUser = userService.saveUser(user);
+        return ResponseEntity.ok().body(newUser);
     }
 }

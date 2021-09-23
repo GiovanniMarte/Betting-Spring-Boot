@@ -22,36 +22,36 @@ public class MatchController {
     @GetMapping
     public ResponseEntity<List<MatchDto>> getMatches() {
         List<MatchDto> matches = matchService.getMatches();
-        return new ResponseEntity<>(matches, OK);
+        return ResponseEntity.ok().body(matches);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<MatchDto> getMatch(@PathVariable int id) {
         MatchDto match = matchService.getMatch(id);
-        return new ResponseEntity<>(match, OK);
+        return ResponseEntity.ok().body(match);
     }
 
     @GetMapping("/{id}/bets")
     public ResponseEntity<List<BetDto>> getBetsByMatch(@PathVariable int id) {
         List<BetDto> bets = matchService.getBetsByMatch(id);
-        return new ResponseEntity<>(bets, OK);
+        return ResponseEntity.ok().body(bets);
     }
 
     @PostMapping()
     public ResponseEntity<MatchDto> saveMatch(@Valid @RequestBody Match match) {
         MatchDto newMatch = matchService.saveMatch(match);
-        return new ResponseEntity<>(newMatch, OK);
+        return ResponseEntity.ok().body(newMatch);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<MatchDto> updateMatch(@PathVariable int id, @Valid @RequestBody Match match) {
         MatchDto updatedMatch = matchService.updateMatch(id, match);
-        return new ResponseEntity<>(updatedMatch, OK);
+        return ResponseEntity.ok().body(updatedMatch);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable int id) {
         matchService.deleteMatch(id);
-        return new ResponseEntity<>(NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
