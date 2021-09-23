@@ -1,10 +1,11 @@
 package com.giovanni.bettingapp.controller;
 
-import com.giovanni.bettingapp.model.Role;
+import com.giovanni.bettingapp.dto.UserDto;
 import com.giovanni.bettingapp.model.User;
 import com.giovanni.bettingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,20 +21,20 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
-        List<User> users = userService.getUsers();
+    public ResponseEntity<List<UserDto>> getUsers() {
+        List<UserDto> users = userService.getUsers();
         return new ResponseEntity<>(users, OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) {
-        User user = userService.getUser(id);
+    public ResponseEntity<UserDto> getUser(@PathVariable int id) {
+        UserDto user = userService.getUser(id);
         return new ResponseEntity<>(user, OK);
     }
 
     @PostMapping
-    public ResponseEntity<User> saveUser(@Valid @RequestBody User user) {
-        User newUser = userService.saveUser(user);
+    public ResponseEntity<UserDto> saveUser(@Valid @RequestBody User user) {
+        UserDto newUser = userService.saveUser(user);
         return new ResponseEntity<>(newUser, OK);
     }
 
@@ -44,8 +45,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @Valid @RequestBody User user) {
-        User updatedUser = userService.updateUser(id, user);
+    public ResponseEntity<UserDto> updateUser(@PathVariable int id, @Valid @RequestBody User user) {
+        UserDto updatedUser = userService.updateUser(id, user);
         return new ResponseEntity<>(updatedUser, OK);
     }
 
