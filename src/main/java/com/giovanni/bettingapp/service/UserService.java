@@ -8,9 +8,9 @@ import com.giovanni.bettingapp.mapper.BetMapper;
 import com.giovanni.bettingapp.mapper.UserMapper;
 import com.giovanni.bettingapp.model.Role;
 import com.giovanni.bettingapp.model.User;
-import com.giovanni.bettingapp.repository.BetRepository;
 import com.giovanni.bettingapp.repository.RoleRepository;
 import com.giovanni.bettingapp.repository.UserRepository;
+import com.giovanni.bettingapp.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,8 @@ public class UserService {
     }
 
     public UserDto saveUser(User user) {
-        validateUser(user);
+        validateUsername(user.getUsername());
+        validatePassword(user.getPassword());
         user.giveDefaultRole();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.toUserDto(userRepository.save(user));
@@ -61,15 +62,19 @@ public class UserService {
     }
 
     public UserDto updateUser(int id, User newUser) {
-        validateUser(newUser);
-        return userRepository.findById(id)
-                .map(user -> {
-                    user.setUsername(newUser.getUsername());
-                    user.setPassword(newUser.getPassword());
-                    user.setEmail(newUser.getEmail());
-                    return userMapper.toUserDto(userRepository.save(user));
-                })
+        User oldUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_WITH_ID + id + NOT_FOUND));
+
+        if (!oldUser.getUsername().equals(newUser.getUsername())) {
+            validateUsername(newUser.getUsername());
+        } else if (!oldUser.getEmail().equals(newUser.getEmail())) {
+            validatePassword(newUser.getPassword());
+        }
+
+        oldUser.setUsername(newUser.getUsername());
+        oldUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        oldUser.setEmail(newUser.getEmail());
+        return userMapper.toUserDto(userRepository.save(oldUser));
     }
 
     public void deleteUser(int id) {
@@ -103,11 +108,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private void validateUser(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new ConflictException(USER_WITH_USERNAME + user.getUsername() + EXISTS);
-        } else if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ConflictException(USER_WITH_EMAIL + user.getEmail() + EXISTS);
+    private void validateUsername(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new ConflictException(USER_WITH_USERNAME + username + EXISTS);
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (userRepository.existsByEmail(password)) {
+            throw new ConflictException(USER_WITH_EMAIL + password + EXISTS);
         }
     }
 }

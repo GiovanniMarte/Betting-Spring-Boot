@@ -24,19 +24,19 @@ public class ExceptionHandlerController {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ExceptionDto> handleException(BadRequestException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), BAD_REQUEST);
-        return new ResponseEntity<>(exceptionDto, BAD_REQUEST);
+        return ResponseEntity.status(BAD_REQUEST).body(exceptionDto);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ExceptionDto> handleException(ResourceNotFoundException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), NOT_FOUND);
-        return new ResponseEntity<>(exceptionDto, NOT_FOUND);
+        return ResponseEntity.status(NOT_FOUND).body(exceptionDto);
     }
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ExceptionDto> handleException(ConflictException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), CONFLICT);
-        return new ResponseEntity<>(exceptionDto, CONFLICT);
+        return ResponseEntity.status(CONFLICT).body(exceptionDto);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -45,42 +45,42 @@ public class ExceptionHandlerController {
         errors.getAllErrors().forEach(error -> errorMessages.add(error.getDefaultMessage()));
 
         ExceptionDto exceptionDto = new ExceptionDto(ConstantUtil.VALIDATION_ERROR, BAD_REQUEST, errorMessages);
-        return new ResponseEntity<>(exceptionDto, BAD_REQUEST);
+        return ResponseEntity.status(BAD_REQUEST).body(exceptionDto);
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ExceptionDto> handleException(HttpMediaTypeNotSupportedException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), UNSUPPORTED_MEDIA_TYPE);
-        return new ResponseEntity<>(exceptionDto, UNSUPPORTED_MEDIA_TYPE);
+        return ResponseEntity.status(UNSUPPORTED_MEDIA_TYPE).body(exceptionDto);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ExceptionDto> handleException(HttpMessageNotReadableException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), BAD_REQUEST);
-        return new ResponseEntity<>(exceptionDto, BAD_REQUEST);
+        return ResponseEntity.status(BAD_REQUEST).body(exceptionDto);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ExceptionDto> handleException(HttpRequestMethodNotSupportedException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), METHOD_NOT_ALLOWED);
-        return new ResponseEntity<>(exceptionDto, METHOD_NOT_ALLOWED);
+        return ResponseEntity.status(METHOD_NOT_ALLOWED).body(exceptionDto);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ExceptionDto> handleException(UnauthorizedException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), UNAUTHORIZED);
-        return new ResponseEntity<>(exceptionDto, UNAUTHORIZED);
+        return ResponseEntity.status(UNAUTHORIZED).body(exceptionDto);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionDto> handleException(AccessDeniedException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), FORBIDDEN);
-        return new ResponseEntity<>(exceptionDto, FORBIDDEN);
+        return ResponseEntity.status(FORBIDDEN).body(exceptionDto);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ExceptionDto> handleException() {
         ExceptionDto exceptionDto = new ExceptionDto(ConstantUtil.URL_NOT_FOUND, NOT_FOUND);
-        return new ResponseEntity<>(exceptionDto, NOT_FOUND);
+        return ResponseEntity.status(NOT_FOUND).body(exceptionDto);
     }
 }

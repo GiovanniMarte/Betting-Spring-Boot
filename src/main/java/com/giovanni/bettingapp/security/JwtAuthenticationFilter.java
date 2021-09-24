@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.*;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
@@ -32,24 +32,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromHeader(request);
-
         if (token != null) {
             try {
                 DecodedJWT decodedJWT = jwtTokenProvider.verifyToken(token);
-
-                String username = decodedJWT.getSubject();
-                List<String> roles = decodedJWT.getClaim("authorities").asList(String.class);
-                Collection<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-                Authentication authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
+                Authentication auth = getAuthentication(decodedJWT);
+                SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (JWTVerificationException e) {
+                SecurityContextHolder.clearContext();
                 response.setStatus(403);
                 response.setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE);
-                MAPPER.writeValue(response.getOutputStream(), new ExceptionDto(e.getMessage(), FORBIDDEN));
+                MAPPER.writeValue(response.getOutputStream(), new ExceptionDto(e.getMessage(), UNAUTHORIZED));
             }
         }
         filterChain.doFilter(request, response);
@@ -61,5 +53,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return header.replace("Bearer ", "");
         }
         return null;
+    }
+
+    private Authentication getAuthentication(DecodedJWT decodedJWT) {
+        String username = decodedJWT.getSubject();
+        List<String> roles = decodedJWT.getClaim("authorities").asList(String.class);
+        Collection<SimpleGrantedAuthority> authorities = roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return new UsernamePasswordAuthenticationToken(username, null, authorities);
     }
 }
