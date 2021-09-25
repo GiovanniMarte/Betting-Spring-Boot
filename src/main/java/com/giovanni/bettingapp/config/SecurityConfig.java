@@ -26,6 +26,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtTokenProvider jwtTokenProvider;
+    private static final String[] SWAGGER_WHITELIST = {
+            "/",
+            "/v2/api-docs",
+            "/swagger-resources/**",
+            "/swagger-ui/**"
+    };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -36,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
+                .antMatchers(GET, SWAGGER_WHITELIST).permitAll()
                 .antMatchers(POST, "/api/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

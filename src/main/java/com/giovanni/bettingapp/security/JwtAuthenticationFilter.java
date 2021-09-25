@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.clearContext();
                 response.setStatus(403);
                 response.setHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE);
-                MAPPER.writeValue(response.getOutputStream(), new ExceptionDto(e.getMessage(), UNAUTHORIZED));
+                MAPPER.writeValue(response.getOutputStream(), new ExceptionDto(e.getMessage(), UNAUTHORIZED.value()));
             }
         }
         filterChain.doFilter(request, response);
