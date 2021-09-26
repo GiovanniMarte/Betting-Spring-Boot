@@ -5,7 +5,6 @@ import com.giovanni.bettingapp.exception.*;
 import com.giovanni.bettingapp.util.ConstantUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.Errors;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -70,12 +69,6 @@ public class ExceptionHandlerController {
     public ResponseEntity<ExceptionDto> handleException(UnauthorizedException ex) {
         ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), UNAUTHORIZED.value());
         return ResponseEntity.status(UNAUTHORIZED).body(exceptionDto);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ExceptionDto> handleException(AccessDeniedException ex) {
-        ExceptionDto exceptionDto = new ExceptionDto(ex.getMessage(), FORBIDDEN.value());
-        return ResponseEntity.status(FORBIDDEN).body(exceptionDto);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)

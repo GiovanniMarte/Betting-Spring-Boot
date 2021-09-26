@@ -10,7 +10,6 @@ import com.giovanni.bettingapp.model.Role;
 import com.giovanni.bettingapp.model.User;
 import com.giovanni.bettingapp.repository.RoleRepository;
 import com.giovanni.bettingapp.repository.UserRepository;
-import com.giovanni.bettingapp.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class UserService {
 
     public UserDto saveUser(User user) {
         validateUsername(user.getUsername());
-        validatePassword(user.getPassword());
+        validateEmail(user.getEmail());
         user.giveDefaultRole();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.toUserDto(userRepository.save(user));
@@ -68,7 +67,7 @@ public class UserService {
         if (!oldUser.getUsername().equals(newUser.getUsername())) {
             validateUsername(newUser.getUsername());
         } else if (!oldUser.getEmail().equals(newUser.getEmail())) {
-            validatePassword(newUser.getPassword());
+            validateEmail(newUser.getEmail());
         }
 
         oldUser.setUsername(newUser.getUsername());
@@ -114,7 +113,7 @@ public class UserService {
         }
     }
 
-    private void validatePassword(String password) {
+    private void validateEmail(String password) {
         if (userRepository.existsByEmail(password)) {
             throw new ConflictException(USER_WITH_EMAIL + password + EXISTS);
         }

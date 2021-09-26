@@ -1,8 +1,8 @@
 package com.giovanni.bettingapp.config;
 
+import com.giovanni.bettingapp.security.JwtAccessDeniedHandler;
 import com.giovanni.bettingapp.security.JwtAuthenticationEntryPoint;
 import com.giovanni.bettingapp.security.JwtAuthenticationFilter;
-import com.giovanni.bettingapp.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,9 @@ import static org.springframework.http.HttpMethod.*;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
     private static final String[] SWAGGER_WHITELIST = {
             "/",
             "/v2/api-docs",
@@ -39,14 +41,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers(GET, SWAGGER_WHITELIST).permitAll()
-                .antMatchers(POST, "/api/auth/**").permitAll()
+                .antMatchers(SWAGGER_WHITELIST).permitAll()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers(POST, "/api/**").hasRole("ADMIN")
+                .antMatchers(PUT, "/api/**").hasRole("ADMIN")
+                .antMatchers(DELETE, "/api/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

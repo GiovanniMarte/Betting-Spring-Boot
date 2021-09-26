@@ -54,7 +54,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Betting App Documentation")
-                .description("Simple betting backend application with multiple endpoints and user authentication. To access all endpoints you must authenticate by logging in or registering")
+                .description("Simple betting backend application with multiple endpoints and user authentication. To access the endpoints you must authenticate by logging in or registering")
                 .version("1.0")
                 .build();
     }
