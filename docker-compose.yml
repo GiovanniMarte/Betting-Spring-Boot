@@ -1,0 +1,21 @@
+services:
+  spring:
+    image: spring-boot-docker
+    container_name: spring-boot-docker
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bet
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=giova
+      - POSTGRES_DB=bet
